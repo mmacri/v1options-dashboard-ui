@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
@@ -50,8 +48,7 @@ export default function App() {
                 max={max}
                 step={step}
                 value={[params[key]]}
-                onValueChange={(v) => update(key, v[0])}
-                aria-label={label}
+                onValueChange={(v: number[]) => update(key, v[0])}
               />
             </div>
           ))}
