@@ -16,6 +16,18 @@ Your project is live at:
 
 **[https://vercel.com/mikemacri-9432s-projects/v0-options-dashboard-ui](https://vercel.com/mikemacri-9432s-projects/v0-options-dashboard-ui)**
 
+### GitHub Pages
+
+To serve the dashboard from GitHub Pages instead of the default README, run:
+
+```bash
+pnpm export
+git add -f docs
+git commit -m "chore: update docs"
+```
+
+The `export` script builds the static site into `docs` (including a `.nojekyll` file). The folder is git-ignored to avoid committing large artifacts by default, so force-add it when publishing to GitHub Pages.
+
 ## Build your app
 
 Continue building your app on:
