@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview --strictPort --port 4173",
     "check": "tsc --noEmit",
-    "export": "vite build && mv dist docs && touch docs/.nojekyll"
+    "export": "rm -rf docs && vite build && mv dist docs && touch docs/.nojekyll"
   },
   "dependencies": {
     "@radix-ui/react-label": "2.1.1",
