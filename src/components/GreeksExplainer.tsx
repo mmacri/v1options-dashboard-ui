@@ -8,33 +8,33 @@ interface Props {
   params: OptionParams
 }
 
-const GREEK_INFO: Record<string, { examples: string; factors: string; tips: string }> = {
+const GREEK_INFO = {
   Delta: {
-    examples: "ATM call ≈ 0.5; deep ITM call → ~1; deep OTM call → ~0. Puts mirror in negative.",
-    factors: "Moneyness, Time to expiry, Implied volatility.",
-    tips: "Use Delta to estimate directional exposure and share equivalence.",
+    definition: "Delta measures the rate of change of the option's price with respect to a $1 change in the underlying asset's price. It's often used as a proxy for the probability of an option expiring in-the-money.",
+    drivers: "Primarily driven by the option's 'moneyness' (strike vs. stock price). It increases as a call option gets deeper in-the-money and approaches 1.0.",
+    insights: "Use Delta to gauge directional risk. A portfolio of stocks and options can be 'delta-neutral', meaning it's hedged against small price movements.",
   },
   Gamma: {
-    examples: "Highest near strike; Delta changes fastest at-the-money.",
-    factors: "Proximity to strike, Time to expiry.",
-    tips: "Short-gamma positions can be whipsawed by sharp moves.",
+    definition: "Gamma measures the rate of change of an option's Delta. It represents how much the Delta will change for a $1 move in the underlying stock. It's a measure of the convexity of the option's value.",
+    drivers: "Gamma is highest for at-the-money options and decreases as the option moves further in- or out-of-the-money. It's also higher for options closer to expiration.",
+    insights: "High Gamma means high risk and high potential reward. It indicates that the option's directional exposure can change very quickly, which can be dangerous for sellers of options (short gamma).",
   },
   Theta: {
-    examples: "Long options lose value as expiry nears; decay accelerates into expiry.",
-    factors: "Time to expiry, IV, Moneyness.",
-    tips: "Income strategies (short options) harvest Theta; long options must overcome decay.",
+    definition: "Theta measures the rate of decline in the value of an option due to the passage of time. It's often called 'time decay'.",
+    drivers: "Theta is always negative for long options. The rate of decay accelerates as the option approaches its expiration date, especially for at-the-money options.",
+    insights: "Theta is the enemy of the option buyer and the friend of the option seller. Income-generating strategies like covered calls or short puts are designed to profit from time decay.",
   },
   Vega: {
-    examples: "Higher IV or longer T → larger Vega; IV up boosts long option values.",
-    factors: "Implied volatility level, Time.",
-    tips: "Beware IV crush post-earnings; short Vega benefits from falling IV.",
+    definition: "Vega measures an option's sensitivity to a 1% change in implied volatility. It tells you how much the option's price will change if the market's expectation of future volatility changes.",
+    drivers: "Vega is highest for at-the-money options with a long time to expiration. It decreases as the option moves away from the money or closer to expiry.",
+    insights: "Vega is crucial around events like earnings announcements, where implied volatility can rise sharply ('IV crush'). Long options benefit from rising IV; short options benefit from falling IV.",
   },
   Rho: {
-    examples: "Higher rates slightly help calls and hurt puts; effect grows with time to expiry.",
-    factors: "Interest rates, Time.",
-    tips: "More relevant for long-dated options.",
+    definition: "Rho measures the sensitivity of an option's price to a 1% change in the risk-free interest rate. It's generally the least impactful of the major Greeks.",
+    drivers: "Rho is most significant for long-dated options. Higher interest rates increase the value of call options and decrease the value of put options.",
+    insights: "While often ignored for short-term options, Rho can be a factor in long-term strategies like LEAPS, especially in a changing interest rate environment.",
   },
-}
+} as const
 
 export function GreeksExplainer({ params }: Props) {
   const greeks = useMemo(() => calculateGreeks(params), [params])
@@ -63,17 +63,15 @@ export function GreeksExplainer({ params }: Props) {
             ρ {greeks.rhoCall.toFixed(2)} / {greeks.rhoPut.toFixed(2)}
           </Badge>
         </div>
-        <Tabs value="examples" className="w-full">
+        <Tabs defaultValue="definition" className="w-full">
           <TabsList>
-            <TabsTrigger value="examples">Examples</TabsTrigger>
-            <TabsTrigger value="factors">Key Factors</TabsTrigger>
-            <TabsTrigger value="tips">Trading Tips</TabsTrigger>
+            <TabsTrigger value="definition">What is it?</TabsTrigger>
+            <TabsTrigger value="drivers">Key Drivers</TabsTrigger>
+            <TabsTrigger value="insights">Trading Insights</TabsTrigger>
           </TabsList>
-          {(["examples", "factors", "tips"] as const).map((tab) => (
-            <TabsContent key={tab} value={tab}>
-              {GREEK_INFO[selected][tab]}
-            </TabsContent>
-          ))}
+          <TabsContent value="definition">{GREEK_INFO[selected].definition}</TabsContent>
+          <TabsContent value="drivers">{GREEK_INFO[selected].drivers}</TabsContent>
+          <TabsContent value="insights">{GREEK_INFO[selected].insights}</TabsContent>
         </Tabs>
       </CardContent>
     </Card>
